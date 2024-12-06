@@ -1,0 +1,23 @@
+{
+  "name": "goldrube",
+  "version": "1.0.0",
+  "description": "goldrube",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kjmehta01/goldrube.git"
+  },
+  "author": "Kunal Mehta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kjmehta01/goldrube/issues"
+  },
+  "homepage": "https://github.com/kjmehta01/goldrube#readme",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
