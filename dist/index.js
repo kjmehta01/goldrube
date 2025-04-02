@@ -1,44 +1,53 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Microservice = exports.Lambda = exports.helper = void 0;
-exports.greet = greet;
-exports.farewell = farewell;
-function greet(name) {
-    return `Hello, ${name}!`;
+exports.Deployable = exports.Microservice = exports.Lambda = void 0;
+exports.deploy = deploy;
+const child_process_1 = require("child_process");
+function deploy(lambda) {
 }
-function farewell(name) {
-    return `Goodbye, ${name}!`;
-}
-exports.helper = {
-    description: "A helper object with useful utilities.",
-    doSomething: () => "I'm doing something useful!",
-};
 class Lambda {
-    constructor(name) {
-        this.name = "";
-        this.outputs = {};
-        this.name = name;
-    }
-    addOutput(output) {
-        this.outputs[output.getName()] = output;
-        return true;
+    constructor(handler) {
+        this.handler = handler;
     }
     setHandler(handler) {
         this.handler = handler;
-    }
-    getName() {
-        return this.name;
+        console.log('SAM: ' + checkSamInstalled());
     }
     trigger(input) {
         if (this.handler === undefined) {
-            return new Promise(function (resolve) {
-                resolve(false);
-            });
+            throw new Error("function does not have handler defined");
         }
-        return this.handler(input, this.outputs);
+        return this.handler(input);
+    }
+    deploy() {
     }
 }
 exports.Lambda = Lambda;
 class Microservice {
 }
 exports.Microservice = Microservice;
+class Deployable {
+}
+exports.Deployable = Deployable;
+function runCommand(command) {
+    try {
+        console.log(`Executing: ${command}`);
+        const output = (0, child_process_1.execSync)(command, { stdio: "pipe" }).toString();
+        console.log(output);
+        return output;
+    }
+    catch (error) {
+        console.error(`Error executing command: ${command}`);
+        throw new Error(error.message);
+    }
+}
+function checkSamInstalled() {
+    try {
+        runCommand("sam --version");
+        return true;
+    }
+    catch (error) {
+        console.error("AWS SAM CLI is not installed or not found in PATH.");
+        return false;
+    }
+}

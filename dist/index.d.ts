@@ -1,25 +1,20 @@
-export declare function greet(name: string): string;
-export declare function farewell(name: string): string;
-export declare const helper: {
-    description: string;
-    doSomething: () => string;
+export type RESTClient<T> = {
+    baseUrl: null | string;
+    suffix: string;
+    data: T;
 };
-export declare class Lambda<T> implements Microservice<T> {
-    name: string;
-    handler: ((input: T, outputs: Outputs) => Promise<boolean>) | undefined;
-    outputs: Outputs;
-    constructor(name: string);
-    addOutput(output: Microservice<any>): boolean;
-    setHandler(handler: (input: T, outputs: Outputs) => Promise<boolean>): void;
-    getName(): string;
-    trigger(input: T): Promise<boolean>;
+export declare function deploy(lambda: Lambda<any, any>): void;
+export declare class Lambda<T, U> implements Microservice<T, U>, Deployable {
+    handler: ((input: T) => Promise<U>) | undefined;
+    constructor(handler: (input: T) => Promise<U>);
+    setHandler(handler: (input: T) => Promise<U>): void;
+    trigger(input: T): Promise<U>;
+    deploy(): void;
 }
-export interface Outputs {
-    [index: string]: Microservice<any>;
+export declare abstract class Microservice<T, U> {
+    abstract setHandler(handler: (input: T) => Promise<U>): void;
+    abstract trigger(input: T): Promise<U>;
 }
-export declare abstract class Microservice<T> {
-    abstract addOutput(output: Microservice<any>): boolean;
-    abstract setHandler(handler: (input: T, outputs: Outputs) => Promise<boolean>): void;
-    abstract getName(): string;
-    abstract trigger(input: T): Promise<boolean>;
+export declare abstract class Deployable {
+    abstract deploy(): void;
 }
